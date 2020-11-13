@@ -1,0 +1,53 @@
+CREATE TABLE users (
+	id INT NOT NULL AUTO_INCREMENT,
+	user_id VARCHAR(20) NOT NULL,
+	password VARCHAR(30) NOT NULL,
+	nickname VARCHAR(15) NOT NULL,
+	pf_image_link VARCHAR(100),
+	pf_message VARCHAR(50),
+	is_withdraw TINYINT NOT NULL DEFAULT 0,
+	register_date DATETIME,
+	PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE channels (
+	id INT NOT NULL AUTO_INCREMENT,
+	title VARCHAR(20) NOT NULL,
+	create_user INT NOT NULL,
+	link VARCHAR(100) NOT NULL,
+	max_people INT NOT NULL,
+	is_withdraw TINYINT NOT NULL DEFAULT 0,
+	create_date DATETIME,
+	PRIMARY KEY (id),
+	FOREIGN KEY (create_user) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE chats (
+	id INT NOT NULL AUTO_INCREMENT,
+	content TEXT NOT NULL,
+	create_user INT NOT NULL,
+	channel_id INT NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (create_user) REFERENCES users(id), 
+	FOREIGN KEY (channel_id) REFERENCES channels(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE follows (
+	id INT NOT NULL AUTO_INCREMENT,
+	follower INT NOT NULL,
+	followee INT NOT NULL,
+	follow_date DATETIME,
+	PRIMARY KEY (id),
+	FOREIGN KEY (follower) REFERENCES users(id) ON DELETE CASCADE,
+	FOREIGN KEY (followee) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE blocks (
+	id INT NOT NULL AUTO_INCREMENT,
+	blocker INT NOT NULL,
+	blocked INT NOT NULL,
+	block_date DATETIME,
+	PRIMARY KEY(id),
+	FOREIGN KEY (blocker) REFERENCES users(id) ON DELETE CASCADE,
+	FOREIGN KEY (blocked) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
